@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace S20775_AR_APBD_ZAD2.Interface
 {
-    public interface ILiquidContainer
+    public interface ILiquidContainer : IContainer
     {
-        double MaxCapacity { get; }
+        double MaxLiquidCapacity { get; }
         void LoadLiquid(double weight);
     }
 }

@@ -8,44 +8,65 @@ namespace S20775_AR_APBD_ZAD2
 {
     public class Ship
     {
-        public List<Container> Containers { get; private set; }
-        public double MaxSpeed { get; private set; }
-        public int MaxContainers { get; private set; }
-        public double MaxWeight { get; private set; }
+        private List<Container> containers = new List<Container>();
 
-        public Ship(double maxSpeed, int maxContainers, double maxWeight)
+        public string Name { get; }
+        public double MaxSpeed { get; }
+        public int MaxContainers { get; }
+        public double MaxWeight { get; }
+
+        public Ship(string name, double maxSpeed, int maxContainers, double maxWeight)
         {
-            Containers = new List<Container>();
+            Name = name;
             MaxSpeed = maxSpeed;
             MaxContainers = maxContainers;
             MaxWeight = maxWeight;
         }
 
-        public void LoadContainer(Container container)
+        public IReadOnlyList<Container> Containers => containers.AsReadOnly();
+
+        public void AddContainer(Container container)
         {
-            if (Containers.Count < MaxContainers && GetTotalWeight() + container.Weight <= MaxWeight)
+            if (containers.Count < MaxContainers && GetTotalWeight() + container.Weight <= MaxWeight)
             {
-                Containers.Add(container);
+                containers.Add(container);
             }
             else
             {
-                throw new Exception("Cannot load container. Ship capacity exceeded.");
+                throw new InvalidOperationException("Cannot load container. Ship capacity exceeded.");
             }
         }
 
-        public void UnloadContainer(Container container)
+        public void RemoveContainer(Container container)
         {
-            Containers.Remove(container);
+            containers.Remove(container);
         }
 
         private double GetTotalWeight()
         {
             double totalWeight = 0;
-            foreach (var container in Containers)
+            foreach (var container in containers)
             {
                 totalWeight += container.Weight;
             }
             return totalWeight;
+        }
+
+        public void UnloadContainerFromShip(Container container, Ship ship)
+        {
+            ship.RemoveContainer(container);
+        }
+
+        public void ReplaceContainerOnShip(Container oldContainer, Container newContainer, Ship ship)
+        {
+            ship.RemoveContainer(oldContainer);
+            ship.AddContainer(newContainer);
+        }
+
+        public void MoveContainerBetweenShips(Container container, Ship sourceShip, Ship destinationShip)
+        {
+            sourceShip.RemoveContainer(container);
+            destinationShip.AddContainer(container);
         }
     }
 }

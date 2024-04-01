@@ -8,6 +8,6 @@ namespace S20775_AR_APBD_ZAD2.Interface
 {
     public interface IHazardNotifier
     {
-        void Notify(string containerNumber);
+        void NotifyHazard(string containerNumber);
     }
 }
